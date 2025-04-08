@@ -4,23 +4,54 @@
   <meta charset="UTF-8">
   <title>Rotating Gravity TicTacToe</title>
   <style>
+    :root {
+      --primary: #1e90ff;
+      --bg: #f5f7fa;
+      --board-bg: #ffffff;
+      --cell-border: #cccccc;
+      --marker-x: #ff4c4c;
+      --marker-o: #1e90ff;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background-color: rgb(166, 196, 229);
+      font-family: "Segoe UI", sans-serif;
+      background-color: var(--bg);
       text-align: center;
-      margin-top: 60px;
+      margin: 0;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      color: #333;
+      font-weight: 600;
+      margin-bottom: 10px;
     }
 
     #controls {
-      margin-bottom: 40px;
+      margin-bottom: 20px;
     }
 
     .drop-button {
-      width: 100px;
+      width: 70px;
       height: 40px;
-      margin: 0px;
-      font-size: 18px;
+      margin: 0 10px;
+      font-size: 24px;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      transition: background-color 0.2s;
       cursor: pointer;
+    }
+
+    .drop-button:hover:enabled {
+      background-color: #187bcd;
+    }
+
+    .drop-button:disabled {
+      background-color: #aaa;
+      cursor: not-allowed;
     }
 
     #board-container {
@@ -29,29 +60,37 @@
     }
 
     #board {
+      background-color: var(--board-bg);
       display: grid;
-      grid-template-columns: repeat(3, 100px);
-      grid-template-rows: repeat(3, 100px);
-      gap: 0px;
-      margin: auto;
+      grid-template-columns: repeat(3, 80px);
+      grid-template-rows: repeat(3, 80px);
+      gap: 4px;
+      padding: 8px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
     .cell {
-      width: 100px;
-      height: 100px;
-      border: 2px solid #000;
+      width: 80px;
+      height: 80px;
+      border: 2px solid var(--cell-border);
       position: relative;
-      font-size: 40px;
+      font-size: 42px;
       user-select: none;
       background-color: #fff;
       display: flex;
       justify-content: center;
       align-items: center;
+      border-radius: 6px;
     }
 
     .marker {
       animation: drop 0.3s ease-out forwards;
+      font-weight: bold;
     }
+
+    .marker.X { color: var(--marker-x); }
+    .marker.O { color: var(--marker-o); }
 
     @keyframes drop {
       from {
@@ -182,14 +221,14 @@
 
       const winner = checkForWinner();
       if (winner) {
-        document.getElementById('message').textContent = winner + ' 获胜！';
+        document.getElementById('message').textContent = winner + ' Win！';
         document.getElementById('turn-indicator').textContent = '';
         gameOver = true;
         return;
       }
 
       if (boardState.every(cell => cell !== null)) {
-        document.getElementById('message').textContent = '平局！';
+        document.getElementById('message').textContent = 'draw！';
         document.getElementById('turn-indicator').textContent = '';
         gameOver = true;
         return;
@@ -198,7 +237,7 @@
       // 延迟3秒后执行旋转和换人逻辑
       setTimeout(() => {
         currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-        document.getElementById('turn-indicator').textContent = '当前回合：' + currentPlayer;
+        document.getElementById('turn-indicator').textContent = 'Current round：' + currentPlayer;
 
         rotationAngle -= 90;
         rotationStep = ((rotationAngle / 90) % 4 + 4) % 4;
@@ -226,7 +265,7 @@
       gameOver = false;
       rotationAngle = 0;
       rotationStep = 0;
-      document.getElementById('turn-indicator').textContent = '当前回合：X';
+      document.getElementById('turn-indicator').textContent = '：X';
       document.getElementById('message').textContent = '';
       boardContainer.style.transform = 'rotate(0deg)';
       for (let i = 0; i < 9; i++) {
